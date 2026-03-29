@@ -19,8 +19,25 @@ let orders = [];
 /* REGISTER */
 app.post("/api/user/register", (req, res) => {
   const { username, password } = req.body;
-  if (!username) return res.json({ success: false });
-  USERS.push({ username, password }); // BUG
+
+  // Basic validation
+  if (!username || !password) {
+    return res.json({ success: false, error: "Username and password are required" });
+  }
+
+  // Prevent duplicate usernames
+  const existingUser = USERS.find(u => u.username === username);
+  if (existingUser) {
+    return res.json({ success: false, error: "Username already taken" });
+  }
+
+  USERS.push({ username, password });
+    typeof password !== "string" ||
+    password.length < 8
+  {
+    return res.status(400).json({ success: false, message: "Invalid username or password" });
+  }
+  USERS.push({ username, password });
   res.json({ success: true });
 });
 
